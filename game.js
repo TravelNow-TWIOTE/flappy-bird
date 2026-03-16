@@ -7,11 +7,16 @@ canvas.height = 600;
 let gravity = 0.5;
 let velocity = 0;
 let birdY = 250;
+let birdRotation = 0;
 
 let pipes = [];
 let frame = 0;
 let score = 0;
+
+let gameRunning = false;
 let gameOver = false;
+
+let bgX = 0;
 
 const birdImg = new Image();
 birdImg.src = "assets/bird.png";
@@ -22,15 +27,48 @@ pipeImg.src = "assets/pipe.png";
 const bgImg = new Image();
 bgImg.src = "assets/background.png";
 
-document.addEventListener("keydown", function(e){
-if(e.code === "Space"){
+document.addEventListener("keydown", e=>{
+if(e.code === "Space" && gameRunning){
 velocity = -8;
 }
 });
 
+document.getElementById("startBtn").onclick = startGame;
+document.getElementById("restartBtn").onclick = restartGame;
+
+const infoButton = document.getElementById("infoButton");
+const instructions = document.getElementById("instructions");
+
+infoButton.onclick = ()=>{
+instructions.style.display =
+instructions.style.display === "none" ? "block" : "none";
+};
+
+function startGame(){
+
+document.getElementById("startScreen").style.display="none";
+gameRunning = true;
+
+}
+
+function restartGame(){
+
+pipes = [];
+birdY = 250;
+velocity = 0;
+frame = 0;
+score = 0;
+gameOver = false;
+
+document.getElementById("gameOverScreen").style.display="none";
+
+gameRunning = true;
+
+}
+
 function createPipe(){
 
-let gap = 160;
+let gap = 170;
 let topHeight = Math.random()*250 + 50;
 
 pipes.push({
@@ -44,20 +82,27 @@ passed:false
 
 function update(){
 
-if(gameOver) return;
+if(!gameRunning || gameOver) return;
 
 velocity += gravity;
 birdY += velocity;
 
+birdRotation = velocity * 3;
+
 frame++;
 
-if(frame % 100 === 0){
+if(frame % 110 === 0){
 createPipe();
 }
 
-for(let i=0;i<pipes.length;i++){
+bgX -= 1;
 
-let pipe = pipes[i];
+if(bgX <= -canvas.width){
+bgX = 0;
+}
+
+pipes.forEach(pipe=>{
+
 pipe.x -= 2;
 
 if(!pipe.passed && pipe.x < 80){
@@ -65,37 +110,54 @@ score++;
 pipe.passed = true;
 }
 
-if(
-80 < pipe.x + 60 &&
-80 + 40 > pipe.x
-){
+let birdLeft = 80;
+let birdRight = 120;
+let birdTop = birdY;
+let birdBottom = birdY + 40;
 
-if(
-birdY < pipe.top ||
-birdY + 40 > canvas.height - pipe.bottom
-){
-gameOver = true;
+let pipeLeft = pipe.x;
+let pipeRight = pipe.x + 60;
+
+if(birdRight > pipeLeft && birdLeft < pipeRight){
+
+if(birdTop < pipe.top || birdBottom > canvas.height - pipe.bottom){
+triggerGameOver();
 }
 
 }
 
-}
+});
 
 if(birdY < 0 || birdY + 40 > canvas.height){
-gameOver = true;
+triggerGameOver();
 }
+
+}
+
+function triggerGameOver(){
+
+gameOver = true;
+gameRunning = false;
+
+document.getElementById("gameOverScreen").style.display="block";
 
 }
 
 function draw(){
 
-ctx.drawImage(bgImg,0,0,canvas.width,canvas.height);
+ctx.drawImage(bgImg,bgX,0,canvas.width,canvas.height);
+ctx.drawImage(bgImg,bgX + canvas.width,0,canvas.width,canvas.height);
 
-ctx.drawImage(birdImg,80,birdY,40,40);
+ctx.save();
 
-for(let i=0;i<pipes.length;i++){
+ctx.translate(100,birdY+20);
+ctx.rotate(birdRotation * Math.PI / 180);
 
-let pipe = pipes[i];
+ctx.drawImage(birdImg,-20,-20,40,40);
+
+ctx.restore();
+
+pipes.forEach(pipe=>{
 
 ctx.drawImage(pipeImg,pipe.x,0,60,pipe.top);
 
@@ -104,17 +166,11 @@ ctx.scale(1,-1);
 ctx.drawImage(pipeImg,pipe.x,-canvas.height + pipe.bottom,60,pipe.bottom);
 ctx.restore();
 
-}
+});
 
 ctx.fillStyle="black";
 ctx.font="30px Arial";
 ctx.fillText(score,20,40);
-
-if(gameOver){
-ctx.fillStyle="red";
-ctx.font="40px Arial";
-ctx.fillText("Game Over",110,300);
-}
 
 }
 
