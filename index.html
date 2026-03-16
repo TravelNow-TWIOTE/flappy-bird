@@ -7,12 +7,25 @@
 
 <body>
 
-<h1 class="title">Flappy Bird</h1>
+<button id="infoButton">?</button>
+
+<div id="instructions">
+<h3>How To Play</h3>
+<p>Press SPACE to flap</p>
+<p>Avoid pipes</p>
+<p>Score by passing pipes</p>
+</div>
+
+<div id="startScreen">
+<h1>Flappy Bird</h1>
+<button id="startBtn">Start Game</button>
+</div>
 
 <canvas id="gameCanvas"></canvas>
 
-<div class="instructions">
-Press SPACE to flap
+<div id="gameOverScreen">
+<h2>Game Over</h2>
+<button id="restartBtn">Restart</button>
 </div>
 
 <script src="game.js"></script>
