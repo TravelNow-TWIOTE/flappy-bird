@@ -3,28 +3,27 @@
 <head>
 <title>Flappy Bird</title>
 <link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
 
-<button id="infoButton">?</button>
+<h1 id="title">FLAPPY BIRD</h1>
 
-<div id="instructions">
-<h3>How To Play</h3>
-<p>Press SPACE to flap</p>
-<p>Avoid pipes</p>
-<p>Score by passing pipes</p>
-</div>
+<button id="instructionsBtn">INSTRUCTIONS</button>
 
-<div id="startScreen">
-<h1>Flappy Bird</h1>
-<button id="startBtn">Start Game</button>
+<div id="instructionsBox">
+<p>Press SPACE or TAP to flap.</p>
+<p>Avoid the pipes.</p>
+<p>Pass pipes to score.</p>
+<p>Press R to restart after losing.</p>
 </div>
 
 <canvas id="gameCanvas"></canvas>
 
-<div id="gameOverScreen">
+<div id="gameOverBox">
 <h2>Game Over</h2>
+<p>Press R to Restart</p>
 <button id="restartBtn">Restart</button>
 </div>
 
