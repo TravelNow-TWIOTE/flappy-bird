@@ -1,1 +1,21 @@
+body{
+margin:0;
+background:#70c5ce;
+text-align:center;
+font-family:Arial, sans-serif;
+}
 
+.title{
+margin-top:10px;
+}
+
+#gameCanvas{
+display:block;
+margin:auto;
+border:3px solid black;
+}
+
+.instructions{
+margin-top:10px;
+font-size:18px;
+}
